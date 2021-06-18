@@ -1,36 +1,24 @@
 package it.polito.tdp.esempioSQL.model;
 
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
+import it.polito.tdp.esempioSQL.db.BabsDAO;
 
 public class LeggiBabs {
 
 	public void run() {
-		String jdbcURL = "jdbc:mysql://localhost/babs?user=root&password=root";
-		try {
-			Connection connection = DriverManager.getConnection(jdbcURL);	
-			String sql = "SELECT NAME FROM station WHERE landmark = ?";
-			
-			PreparedStatement st = connection.prepareStatement(sql);
-			st.setString(1, "Palo Alto");
-			ResultSet res = st.executeQuery();
-			while(res.next()) {
-				String nomeStazione = res.getString("name");
-				System.out.println(nomeStazione);
-			}
-			st.close();
+		BabsDAO dao =  new BabsDAO();
+		List<Station> all = dao.listStation();
 		
-			connection.close();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+		for(Station s : all) {
+			System.out.println(s.getName());
 		}
 		
+		System.out.println("------------------------");
+		
+		List<Station> paloAlto = dao.listStationByLandmark("Palo Alto");
+		for(Station s : paloAlto) {
+			System.out.println(s.getName());
+		}
 		
 		
 	}
